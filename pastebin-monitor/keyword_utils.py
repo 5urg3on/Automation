@@ -1,3 +1,4 @@
+#DELETE THIS FILE AS IT GENERATE FALSE POSITIVE USE: generate_keywords.py INSTEAD
 import re
 
 def generate_keywords(domains):
