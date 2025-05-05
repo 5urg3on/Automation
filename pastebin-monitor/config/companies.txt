@@ -1,0 +1,6 @@
+#This are imaginary Domains, replace with your different domains you want to monitor
+jauto.com
+alasary.com
+polkf.com
+yourcompany.net
+example.org
