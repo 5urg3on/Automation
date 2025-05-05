@@ -1,4 +1,4 @@
-# Pastebin Monitoring System
+# Automated Pastebin Monitoring System
 
 A Python-based system to monitor Pastebin leaks for company-related data using keywords generated from domains.
 
@@ -12,7 +12,7 @@ A Python-based system to monitor Pastebin leaks for company-related data using k
 ## Setup
 
 ```bash
-git clone https://github.com/yourorg/pastebin-monitor.git
+git clone https://github.com/5urg3on/Automation.git
 cd pastebin-monitor
 pip install -r requirements.txt
 cp .env.example .env
