@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
-from keyword_utils import generate_keywords
+from generate_keywords import generate_keywords
 from notifier import notify_make, notify_slack
 
 load_dotenv()
@@ -39,11 +39,16 @@ def check_paste_content(paste_id):
         res = requests.get(PASTEBIN_RAW + paste_id, headers={"User-Agent": USER_AGENT}, proxies=PROXIES)
         content = res.text.lower()
 
-        company_matches = [kw for kw in KEYWORDS if re.search(rf"\b{re.escape(kw.lower())}\b", content)]
+        company_matches = []
+        for kw in KEYWORDS:
+            pattern = rf"(?<!\w){re.escape(kw.lower())}(?!\w)"  # exact keyword match
+            if re.search(pattern, content):
+                company_matches.append(kw)
+
         if not company_matches:
             return None  # Ignore if no company-related match
 
-        # Secondary scan for sensitive patterns (optional)
+        # Optional sensitive info check
         sensitive_patterns = [
             r"\b\d{3}[-.\s]??\d{3}[-.\s]??\d{4}\b",        # Phone numbers
             r"\b\d{4}[-.\s]??\d{4}[-.\s]??\d{4}[-.\s]??\d{4}\b",  # Credit cards
@@ -53,6 +58,7 @@ def check_paste_content(paste_id):
             if re.search(pattern, content):
                 company_matches.append(f"[Sensitive: {pattern}]")
 
+        print(f"[DEBUG] Keywords found in paste {paste_id}: {company_matches}")  # Helpful debug
         return {
             "paste_id": paste_id,
             "url": f"https://pastebin.com/{paste_id}",
