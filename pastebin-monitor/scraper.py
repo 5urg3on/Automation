@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
 from generate_keywords import generate_keywords
-from keyword_utils import generate_keywords
+#from keyword_utils import generate_keywords //replaced by generate_keywords
 from notifier import notify_make, notify_slack
 
 load_dotenv()
