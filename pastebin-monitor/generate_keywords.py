@@ -14,5 +14,5 @@ def generate_keywords(domains):
             f"{name}admin",
             f"{name}123"
         })
-    
+
     return list(keywords)
