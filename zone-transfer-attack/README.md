@@ -34,7 +34,7 @@ sudo apt install dnsutils
 Clone the project to your local machine:
 
 ```bash
-git clone https://github.com/5urg3on/Automation/.git
+git clone https://github.com/5urg3on/Automation.git
 cd Automation/zone-transfer-attack
 ```
 
