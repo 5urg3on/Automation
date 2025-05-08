@@ -37,6 +37,7 @@ Sensitive DNS configuration data such as:
 Securing your DNS zone transfers is crucial to protecting the integrity and confidentiality of your domain's infrastructure.
 
 
+## Zone Transfer Attack Check
 
 `zone-transfer-attack` is a python tool designed to attempt DNS zone transfers (AXFR) on target domains by querying their authoritative DNS servers. It helps security professionals identify misconfigurations or vulnerabilities in DNS servers that might expose sensitive zone data.
 
