@@ -91,7 +91,7 @@ Contributions are welcome! If you find bugs or would like to enhance the functio
 
 ## **License**
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ---
 
