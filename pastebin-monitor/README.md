@@ -5,7 +5,7 @@ A Python-based system to monitor Pastebin leaks for company-related data using k
 ## Features
 
 - Automatic keyword generation from company domains
-- Slack + Make.com webhook alerts
+- Slack or Make.com webhook alerts to slack
 - Optional TOR proxy support for anonymity
 - Easy to deploy on Kali, VPS, or Raspberry Pi
 
