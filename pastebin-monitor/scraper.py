@@ -1,12 +1,11 @@
 import os
 import re
 import time
-import requests
+import cloudscraper
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
 from generate_keywords import generate_keywords
-#from keyword_utils import generate_keywords //replaced by generate_keywords
 from notifier import notify_make, notify_slack
 
 load_dotenv()
@@ -16,19 +15,22 @@ PASTEBIN_RAW = "https://pastebin.com/raw/"
 USER_AGENT = "Mozilla/5.0"
 USE_TOR = os.getenv("USE_TOR", "false").lower() == "true"
 
-# Read company domains
+# Company domains
 with open("config/companies.txt") as f:
     COMPANY_DOMAINS = [line.strip() for line in f.readlines()]
 KEYWORDS = generate_keywords(COMPANY_DOMAINS)
 
-PROXIES = {
-    'http': 'socks5h://127.0.0.1:9050',
-    'https': 'socks5h://127.0.0.1:9050'
-} if USE_TOR else {}
+# Setup scraper
+scraper = cloudscraper.create_scraper(browser='chrome')
+if USE_TOR:
+    scraper.proxies = {
+        'http': 'socks5h://127.0.0.1:9050',
+        'https': 'socks5h://127.0.0.1:9050'
+    }
 
 def get_recent_pastes():
     try:
-        res = requests.get(PASTEBIN_ARCHIVE, headers={"User-Agent": USER_AGENT}, proxies=PROXIES)
+        res = scraper.get(PASTEBIN_ARCHIVE, headers={"User-Agent": USER_AGENT})
         soup = BeautifulSoup(res.text, 'html.parser')
         return [a.get("href")[1:] for a in soup.select("table.maintable tr td a")[:10]]
     except Exception as e:
@@ -37,21 +39,21 @@ def get_recent_pastes():
 
 def check_paste_content(paste_id):
     try:
-        res = requests.get(PASTEBIN_RAW + paste_id, headers={"User-Agent": USER_AGENT}, proxies=PROXIES)
+        res = scraper.get(PASTEBIN_RAW + paste_id, headers={"User-Agent": USER_AGENT})
         content = res.text.lower()
 
         company_matches = []
         for kw in KEYWORDS:
-            pattern = rf"(?<!\w){re.escape(kw.lower())}(?!\w)"  # exact keyword match
+            pattern = rf"(?<!\w){re.escape(kw.lower())}(?!\w)"
             if re.search(pattern, content):
                 company_matches.append(kw)
 
         if not company_matches:
-            return None  # Ignore if no company-related match
+            return None
 
-        # Optional sensitive info check
+        # Check for sensitive patterns
         sensitive_patterns = [
-            r"\b\d{3}[-.\s]??\d{3}[-.\s]??\d{4}\b",        # Phone numbers
+            r"\b\d{3}[-.\s]??\d{3}[-.\s]??\d{4}\b",         # Phone numbers
             r"\b\d{4}[-.\s]??\d{4}[-.\s]??\d{4}[-.\s]??\d{4}\b",  # Credit cards
             r"(sk|api|key|token|secret)[_-]?[a-z0-9]{10,}",      # API keys
         ]
@@ -59,7 +61,7 @@ def check_paste_content(paste_id):
             if re.search(pattern, content):
                 company_matches.append(f"[Sensitive: {pattern}]")
 
-        print(f"[DEBUG] Keywords found in paste {paste_id}: {company_matches}")  # Helpful debug
+        print(f"[DEBUG] Keywords found in paste {paste_id}: {company_matches}")
         return {
             "paste_id": paste_id,
             "url": f"https://pastebin.com/{paste_id}",
@@ -81,7 +83,7 @@ def main():
                 print(f"[ALERT] Match found in {result['url']}")
                 notify_make(result)
                 notify_slack(result)
-        time.sleep(3600)
+        time.sleep(1000)
 
 if __name__ == "__main__":
     main()
