@@ -42,4 +42,3 @@ def generate_keywords(domains):
         keywords.update(internal_keywords)
     
     return list(keywords)
-
