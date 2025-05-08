@@ -116,6 +116,13 @@ www.example.com. 86400 IN  CNAME example.com.
 
 ---
 
+## Sample Test 
+### You can test against zonetransfer.me which is an intentional vulnerable to and allow Zone Transfer to have more knowledge of possible output to expect
+```bash
+dig AXFR @nsztm1.digi.ninja zonetransfer.me
+...
+```
+
 ## **Contributing**
 
 Contributions are welcome! If you find bugs or would like to enhance the functionality, feel free to open issues or submit pull requests.
@@ -138,6 +145,7 @@ This project is licensed under the MIT License.
 
 * Inspired by common DNS auditing tools.
 * Uses `dig` for querying DNS servers.
+
 
 ---
 
