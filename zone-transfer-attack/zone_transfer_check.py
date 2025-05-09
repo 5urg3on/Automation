@@ -5,7 +5,8 @@ import os
 def read_domains_from_file(file_path):
     try:
         with open(file_path, 'r') as file:
-            domains = [line.strip() for line in file.readlines() if line.strip()]
+            # Lines starting with '#' will be treated as comments and skipped
+            domains = [line.strip() for line in file.readlines() if line.strip() and not line.strip().startswith("#")]
         return domains
     except FileNotFoundError:
         print(f"[!] {file_path} not found!")
