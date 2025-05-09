@@ -1,3 +1,6 @@
-example.com
-targetdomain.com
-anotherdomain.org
+# You can comment out domain you dont want to run the check again, 
+# Zone transfer will be run against any uncomment domain
+zonetransfer.me
+#example.com
+#targetdomain.com
+#anotherdomain.org
